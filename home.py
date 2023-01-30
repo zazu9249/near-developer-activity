@@ -75,3 +75,72 @@ elif time_range == "1 Year":
 fig = px.line(df, x='HOUR', y='HOURLY_PRICE', title='Hourly Price Trend of NEAR')
 fig.update_layout(legend_title=None, xaxis_title='Hour', yaxis_title='Price (in $)')
 st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+
+st.header('**Methodology**')
+st.write(
+    """
+    This Dashboard (Near - Developer Activity) was particularly created for the
+    **NEAR's Developer Activity** challenge on [**MetricsDAO**](https://metricsdao.xyz).
+    The data for this dashboard was imported from the [**Flipside Crypto**](https://flipsidecrypto.xyz)
+    data platform by using its **REST API**. 
+    This data was curated by using Electric Capital's NEAR sub-ecosystems available through their
+    [**GitHub repository**](https://github.com/electric-capital/crypto-ecosystems/tree/master/data/ecosystems/n).
+    
+    The code for this report is saved and accessible in the **home.py** file of its
+    [**GitHub Repository**](https://github.com/zazu9249/near-developer-activity). The links to the SQL queries
+    collection is [**Query Collection**](https://app.flipsidecrypto.com/velocity/collections/ae31a929-d872-445c-8e50-de18711266d6)
+    """
+)
+
+st.header('**Overall Metrics**')
+metrics = pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/dec1c3d0-c890-453d-a7d8-7ae34e76768c/data/latest')
+c1, c2, c3 = st.columns([1,1,1])
+with c1:
+    st.metric(label='**Number of Organizations**', value=str(metrics['Organizations'].values[0]))
+with c2:
+    st.metric(label='**Number of Repositories**', value=str(metrics['Repositories'].values[0]))
+with c3:
+    st.metric(label='**Number of Developers**', value=str(metrics['Developers'].values[0]))
+
+c1, c2, c3 = st.columns([1,1,1])
+with c1:
+    st.metric(label='**Number of PRs**', value=str(metrics['PRs'].values[0]))
+with c2:
+    st.metric(label='**Number of GIT Actions**', value=str(metrics['Actions'].values[0]))
+with c3:
+    st.metric(label='**Number of Issues**', value=str(metrics['Issues'].values[0]))
+
+st.header('**Activity over Time**')
+
+activity_time = pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/9268584b-cb5d-48ea-a654-dcb089c4bdaa/data/latest')
+
+fig=px.bar(activity_time, title='Number of Active Developers working over Time', x='DATE', y='Developers')
+fig.update_layout(legend_title=None, xaxis_title='Day', yaxis_title="Number of Developers")
+st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+fig=px.bar(activity_time, title='Number of PRs created over Time', x='DATE', y='PRs')
+fig.update_layout(legend_title=None, xaxis_title='Day', yaxis_title="Number of PRs created")
+st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+fig=px.bar(activity_time, title='Number of Issues raised over Time', x='DATE', y='Issues')
+fig.update_layout(legend_title=None, xaxis_title='Day', yaxis_title="Number of Issues")
+st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+developer_role = pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/8ad5c1ad-5d19-4b1c-a8e5-5bdb83a47538/data/latest')
+fig = px.pie(developer_role, values='COUNT', names='AUTHORASSOCIATION', title='Developers by Role')
+fig.update_layout(showlegend = True)
+st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+c1, c2 = st.columns([1,1])
+with c1:
+    devs_by_org = pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/474aee08-d8b9-495a-a9d3-235825c27d7d/data/latest')
+    fig = px.pie(devs_by_org, values='NO_OF_DEVELOPERS', names='ORG', title='Popular Organizations by Developers Count')
+    fig.update_layout(showlegend = True)
+    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+with c2:
+    devs_by_repo = pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/addc8a16-7625-4341-b9ca-7b0c06fb139c/data/latest')
+    fig = px.pie(devs_by_repo, values='NO_OF_DEVELOPERS', names='REPO', title='Popular Repos by Developers Count')
+    fig.update_layout(showlegend = True)
+    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
