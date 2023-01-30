@@ -78,6 +78,13 @@ st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
 
 st.header('**Methodology**')
+c1,c2,c3 = st.columns([1,1,1])
+with c1:
+    st.info('**[My Tweet](https://twitter.com/ZazuCoco/status/1618444933433790466)**', icon="📄")
+with c2:
+    st.info('**[GitHub Repository](https://github.com/zazu9249/near-developer-activity)**', icon="💻")
+with c3:
+    st.info('**[Queries Collection](https://app.flipsidecrypto.com/velocity/collections/ae31a929-d872-445c-8e50-de18711266d6)**', icon="❓")    
 st.write(
     """
     This Dashboard (Near - Developer Activity) was particularly created for the
